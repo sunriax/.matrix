@@ -1,0 +1,14 @@
+I=20mA
+U=2.2V
+
+R_5V=U/I=(5V-2.2V)/20mA   = 140 Ohm
+R_3V3=U/I=(3V3-2.2V)/20mA = 55 Ohm
+
+DOTS (7*5=35)
+
+Refresh Rate -> 50Hz
+Min-Timer Frequency = 50*35=1750 Hz
+
+Density Control 1-16
+Timer-Frequency = 1750 Hz * 16 * 2 = 56 kHz
+

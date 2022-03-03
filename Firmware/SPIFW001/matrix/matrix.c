@@ -289,6 +289,262 @@ const __flash unsigned char NINE[] = {
 	0b0111110
 };
 
+const __flash unsigned char SPACE[] = {
+	0b1000110,
+	0b1001001,
+	0b1001001,
+	0b1001001,
+	0b0111110
+};
+
+const __flash unsigned char EXCLAMATIONMARK[] = {
+	0b0000000,
+	0b0000000,
+	0b1011111,
+	0b0000000,
+	0b0000000
+};
+
+const __flash unsigned char QUOTATIONMARK[] = {
+	0b0000000,
+	0b0000000,
+	0b0000011,
+	0b0000011,
+	0b0000000
+};
+
+const __flash unsigned char HASHTAG[] = {
+	0b0100100,
+	0b1111110,
+	0b0100100,
+	0b1111110,
+	0b0100100
+};
+
+const __flash unsigned char DOLLAR[] = {
+	0b0010010,
+	0b0101010,
+	0b1111111,
+	0b0101010,
+	0b0100100
+};
+
+const __flash unsigned char PERCENT[] = {
+	0b0100000,
+	0b0010100,
+	0b0001000,
+	0b0100100,
+	0b0000010
+};
+
+const __flash unsigned char AND[] = {
+	0b0110110,
+	0b1001001,
+	0b1001001,
+	0b1001010,
+	0b1110000
+};
+
+const __flash unsigned char SINGLEQUOTE[] = {
+	0b0000000,
+	0b0000000,
+	0b0000000,
+	0b0000011,
+	0b0000000
+};
+
+const __flash unsigned char BRACEOPEN[] = {
+	0b0111110,
+	0b1000001,
+	0b1000001,
+	0b0000000,
+	0b0000000
+};
+
+const __flash unsigned char BRACECLOSE[] = {
+	0b0000000,
+	0b0000000,
+	0b1000001,
+	0b1000001,
+	0b0111110
+};
+
+const __flash unsigned char STAR[] = {
+	0b0000000,
+	0b0000000,
+	0b0000101,
+	0b0000010,
+	0b0000101
+};
+
+const __flash unsigned char PLUS[] = {
+	0b0000000,
+	0b0001000,
+	0b0011100,
+	0b0001000,
+	0b0000000
+};
+
+const __flash unsigned char COMMA[] = {
+	0b0000000,
+	0b0000000,
+	0b0000000,
+	0b1100000,
+	0b0000000
+};
+
+const __flash unsigned char MINUS[] = {
+	0b0000000,
+	0b0001000,
+	0b0001000,
+	0b0001000,
+	0b0000000
+};
+
+const __flash unsigned char DOT[] = {
+	0b0000000,
+	0b0000000,
+	0b0000000,
+	0b1000000,
+	0b0000000
+};
+
+const __flash unsigned char SLASH[] = {
+	0b0000000,
+	0b1100000,
+	0b0111110,
+	0b0000011,
+	0b0000000
+};
+
+const __flash unsigned char COLON[] = {
+	0b0000000,
+	0b0000000,
+	0b0100100,
+	0b0000000,
+	0b0000000
+};
+
+const __flash unsigned char SEMICOLON[] = {
+	0b0000000,
+	0b0000000,
+	0b1100100,
+	0b0000000,
+	0b0000000
+};
+
+const __flash unsigned char LOWERTHAN[] = {
+	0b0000000,
+	0b0001000,
+	0b0010100,
+	0b0100010,
+	0b0000000
+};
+
+const __flash unsigned char EQUAL[] = {
+	0b0000000,
+	0b0010100,
+	0b0010100,
+	0b0010100,
+	0b0000000
+};
+
+const __flash unsigned char GREATERTHAN[] = {
+	0b0000000,
+	0b0100010,
+	0b0010100,
+	0b0001000,
+	0b0000000
+};
+
+const __flash unsigned char QUESTIONMARK[] = {
+	0b0000010,
+	0b0000001,
+	0b1011001,
+	0b0001001,
+	0b0000110
+};
+
+const __flash unsigned char AT[] = {
+	0b0111110,
+	0b1000001,
+	0b1001001,
+	0b1010101,
+	0b1011100
+};
+
+const __flash unsigned char SQUAREBRACEOPEN[] = {
+	0b0000000,
+	0b1111111,
+	0b1000001,
+	0b1000001,
+	0b0000000
+};
+
+const __flash unsigned char BACKSLASH[] = {
+	0b0000000,
+	0b0000011,
+	0b01111100,
+	0b1100000,
+	0b0000000
+};
+
+const __flash unsigned char SQUAREBRACECLOSE[] = {
+	0b0000000,
+	0b1000001,
+	0b1000001,
+	0b1111111,
+	0b0000000
+};
+
+const __flash unsigned char POWEROF[] = {
+	0b0000000,
+	0b0000010,
+	0b0000001,
+	0b0000010,
+	0b0000000
+};
+
+const __flash unsigned char UNDERLINE[] = {
+	0b0000000,
+	0b1000000,
+	0b1000000,
+	0b1000000,
+	0b0000000
+};
+
+const __flash unsigned char CURVEDBRACEOPEN[] = {
+	0b0001000,
+	0b0110110,
+	0b1000001,
+	0b0000000,
+	0b0000000
+};
+
+const __flash unsigned char PIPE[] = {
+	0b0000000,
+	0b0000000,
+	0b1111111,
+	0b0000000,
+	0b0000000
+};
+
+const __flash unsigned char CURVEDBRACECLOSE[] = {
+	0b0000000,
+	0b0000000,
+	0b1000001,
+	0b0110110,
+	0b0001000
+};
+
+const __flash unsigned char TILDE[] = {
+	0b0000010,
+	0b0000001,
+	0b0000010,
+	0b0000100,
+	0b0000010
+};
+
 void matrix_setup()
 {
 	PORTA.DIRSET = PIN7_bm | PIN6_bm | PIN5_bm;
@@ -499,6 +755,102 @@ void matrix_char2buffer(char character, volatile unsigned char *buffer)
 		case '9':
 			memcpy_P(temp, NINE, sizeof(temp));
 			break;
+		case '!':
+			memcpy_P(temp, EXCLAMATIONMARK, sizeof(temp));
+			break;
+		case '"':
+			memcpy_P(temp, QUOTATIONMARK, sizeof(temp));
+			break;
+		case '#':
+			memcpy_P(temp, HASHTAG, sizeof(temp));
+			break;
+		case '$':
+			memcpy_P(temp, DOLLAR, sizeof(temp));
+			break;
+		case '%':
+			memcpy_P(temp, PERCENT, sizeof(temp));
+			break;
+		case '&':
+			memcpy_P(temp, AND, sizeof(temp));
+			break;
+		case '\'':
+			memcpy_P(temp, SINGLEQUOTE, sizeof(temp));
+			break;
+		case '(':
+			memcpy_P(temp, BRACEOPEN, sizeof(temp));
+			break;
+		case ')':
+			memcpy_P(temp, BRACECLOSE, sizeof(temp));
+			break;
+		case '*':
+			memcpy_P(temp, STAR, sizeof(temp));
+			break;
+		case '+':
+			memcpy_P(temp, PLUS, sizeof(temp));
+			break;
+		case ',':
+			memcpy_P(temp, COMMA, sizeof(temp));
+			break;
+		case '-':
+			memcpy_P(temp, MINUS, sizeof(temp));
+			break;
+		case '.':
+			memcpy_P(temp, DOT, sizeof(temp));
+			break;
+		case '/':
+			memcpy_P(temp, SLASH, sizeof(temp));
+			break;
+		case ':':
+			memcpy_P(temp, COLON, sizeof(temp));
+			break;
+		case ';':
+			memcpy_P(temp, SEMICOLON, sizeof(temp));
+			break;
+		case '<':
+			memcpy_P(temp, LOWERTHAN, sizeof(temp));
+			break;
+		case '=':
+			memcpy_P(temp, EQUAL, sizeof(temp));
+			break;
+		case '>':
+			memcpy_P(temp, GREATERTHAN, sizeof(temp));
+			break;
+		case '?':
+			memcpy_P(temp, QUESTIONMARK, sizeof(temp));
+			break;
+		case '@':
+			memcpy_P(temp, AT, sizeof(temp));
+			break;
+		case '[':
+			memcpy_P(temp, SQUAREBRACEOPEN, sizeof(temp));
+			break;
+		case '\\':
+			memcpy_P(temp, BACKSLASH, sizeof(temp));
+			break;
+		case ']':
+			memcpy_P(temp, SQUAREBRACECLOSE, sizeof(temp));
+			break;
+		case '^':
+			memcpy_P(temp, POWEROF, sizeof(temp));
+			break;
+		case '_':
+			memcpy_P(temp, UNDERLINE, sizeof(temp));
+			break;
+		case '{':
+			memcpy_P(temp, CURVEDBRACEOPEN, sizeof(temp));
+			break;
+		case '|':
+			memcpy_P(temp, PIPE, sizeof(temp));
+			break;
+		case '}':
+			memcpy_P(temp, CURVEDBRACECLOSE, sizeof(temp));
+			break;
+		case '~':
+			memcpy_P(temp, TILDE, sizeof(temp));
+			break;
+		default:
+			memcpy_P(temp, SPACE, sizeof(temp));
+		break;
 	}
 	
 	for (unsigned char y=0; y < 7; y++)
@@ -507,7 +859,41 @@ void matrix_char2buffer(char character, volatile unsigned char *buffer)
 		
 		for (unsigned char x=0; x < 5; x++)
 		{
-			buffer[y] |= (temp[x]<<(6 - y));
+			buffer[y] |= (temp[x]<<(4 - x));
+		}
+	}
+}
+
+void matrix_buffer2eeprom(volatile unsigned char *buffer, unsigned char address)
+{
+	char temp[5];
+	
+	for (unsigned char y=0; y < 5; y++)
+	{
+		temp[y] = 0x00;
+		
+		for (unsigned char x=0; x < 7; x++)
+		{
+			temp[y] |= (buffer[x]<<(6 - x));
+		}
+	}
+	
+	eeprom_write_block(temp, (void*)(address * sizeof(temp)), sizeof(temp));
+}
+
+void matrix_eeprom2buffer(volatile unsigned char *buffer, unsigned char address)
+{
+	char temp[5];
+	
+	eeprom_read_block(temp, (const void*)(address * sizeof(temp)), sizeof(temp));
+	
+	for (unsigned char y=0; y < 7; y++)
+	{
+		buffer[y] = 0x00;
+		
+		for (unsigned char x=0; x < 5; x++)
+		{
+			buffer[y] |= (temp[x]<<(4 - x));
 		}
 	}
 }

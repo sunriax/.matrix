@@ -19,6 +19,9 @@ volatile unsigned char copy;
 volatile unsigned char intensity;
 volatile unsigned char rate;
 
+volatile unsigned char eeprom_save;
+volatile unsigned char eeprom_load;
+
 volatile unsigned char matrix[] = {
 	0b00000,
 	0b00000,
@@ -56,15 +59,61 @@ ISR(PORTA_PORT_vect)
 			{
 				matrix[i] = 0x00;
 			}
-		
 		break;
-		case 0x10:	// Display intensity
+		case 0x10:	// Display Enable
+			if(0x01 & spi_data)
+			{
+				TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+			}
+			else
+			{
+				TCA0.SINGLE.CTRLA &= ~TCA_SINGLE_ENABLE_bm;
+				matrix_row_clear();
+				matrix_column_clear();
+			}
+		break;
+		case 0x11:	// Display intensity
 			intensity = (0x0F & spi_data);
 		break;
-		case 0x11:	// Display refresh rate
+		case 0x12:	// Display refresh rate
 			TCA0.SINGLE.PER = 0xFF - (0x7F & spi_data);
 		break;
-		
+		case 0x20:	// Copy matrix content to EEPROM
+		case 0x21:
+		case 0x22:
+		case 0x23:
+		case 0x24:
+		case 0x25:
+		case 0x26:
+		case 0x27:
+		case 0x28:
+		case 0x29:
+		case 0x2A:
+		case 0x2B:
+		case 0x2C:
+		case 0x2D:
+		case 0x2E:
+		case 0x2F:
+			eeprom_save = spi_command;
+		break;
+		case 0x30:	// Display EEPROM
+		case 0x31:
+		case 0x32:
+		case 0x33:
+		case 0x34:
+		case 0x35:
+		case 0x36:
+		case 0x37:
+		case 0x38:
+		case 0x39:
+		case 0x3A:
+		case 0x3B:
+		case 0x3C:
+		case 0x3D:
+		case 0x3E:
+		case 0x3F:
+			eeprom_load = spi_command;
+		break;
 		default:
 		break;
 	}
@@ -129,7 +178,7 @@ int main(void)
 	// TIMER Setup
 	TCA0.SINGLE.PER = 0xFF;
 	TCA0.SINGLE.INTCTRL = TCA_SINGLE_CMP0_bm;
-	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc;
 	
 	// SPI Setup
 	PORTA.PIN4CTRL = PORT_PULLUPEN_bm | PORT_ISC_RISING_gc;
@@ -156,8 +205,19 @@ int main(void)
 		{
 			// Copy ASCII-char to array
 			matrix_char2buffer(copy, matrix);
-			
 			copy = '\0';
+		}
+		
+		if(eeprom_save != 0)
+		{
+			matrix_buffer2eeprom(matrix, (0x0F & eeprom_save));
+			eeprom_save = 0;
+		}
+		
+		if(eeprom_load != 0)
+		{
+			matrix_eeprom2buffer(matrix, (0x0F & eeprom_load));
+			eeprom_load = 0;
 		}
 	}
 }

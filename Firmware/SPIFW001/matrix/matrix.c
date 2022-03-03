@@ -866,7 +866,7 @@ void matrix_char2buffer(char character, volatile unsigned char *buffer)
 
 void matrix_buffer2eeprom(volatile unsigned char *buffer, unsigned char address)
 {
-	char temp[5];
+	unsigned char temp[5];
 	
 	for (unsigned char y=0; y < 5; y++)
 	{
@@ -878,14 +878,20 @@ void matrix_buffer2eeprom(volatile unsigned char *buffer, unsigned char address)
 		}
 	}
 	
-	eeprom_write_block(temp, (void*)(address * sizeof(temp)), sizeof(temp));
+	for (unsigned char i=0; i < sizeof(temp); i++)
+	{
+		eeprom_write_byte(&temp[i], ((address * 7) + i));
+	}
 }
 
 void matrix_eeprom2buffer(volatile unsigned char *buffer, unsigned char address)
 {
-	char temp[5];
+	unsigned char temp[5];
 	
-	eeprom_read_block(temp, (const void*)(address * sizeof(temp)), sizeof(temp));
+	for (unsigned char i=0; i < sizeof(temp); i++)
+	{
+		temp[i] = eeprom_read_byte((unsigned char*)((address * 7) + i));
+	}
 	
 	for (unsigned char y=0; y < 7; y++)
 	{

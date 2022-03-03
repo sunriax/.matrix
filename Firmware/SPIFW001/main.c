@@ -78,7 +78,7 @@ ISR(PORTA_PORT_vect)
 		case 0x12:	// Display refresh rate
 			TCA0.SINGLE.PER = 0xFF - (0x7F & spi_data);
 		break;
-		case 0x20:	// Copy matrix content to EEPROM
+		case 0x20:	// Display EEPROM
 		case 0x21:
 		case 0x22:
 		case 0x23:
@@ -94,9 +94,9 @@ ISR(PORTA_PORT_vect)
 		case 0x2D:
 		case 0x2E:
 		case 0x2F:
-			eeprom_save = spi_command;
+			eeprom_load = spi_command;
 		break;
-		case 0x30:	// Display EEPROM
+		case 0x30:	// Copy matrix content to EEPROM
 		case 0x31:
 		case 0x32:
 		case 0x33:
@@ -112,7 +112,7 @@ ISR(PORTA_PORT_vect)
 		case 0x3D:
 		case 0x3E:
 		case 0x3F:
-			eeprom_load = spi_command;
+			eeprom_save = spi_command;
 		break;
 		default:
 		break;

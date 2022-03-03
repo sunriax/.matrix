@@ -1,5 +1,6 @@
 
 #define F_CPU 16000000UL
+#define BAUDRATE ((64UL*F_CPU)/(16UL*9600UL))
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -151,7 +152,7 @@ ISR(TCA0_OVF_vect)
 }
 
 ISR(SPI0_INT_vect)
-{	
+{
 	spi_pointer++;
 	
 	if(spi_pointer % 2)
@@ -164,6 +165,13 @@ ISR(SPI0_INT_vect)
 		spi_pointer = 0;
 	}
 }
+
+ISR(USART0_RXC_vect)
+{
+	copy = USART0.RXDATAL;
+}
+
+
 
 
 int main(void)
@@ -180,10 +188,31 @@ int main(void)
 	TCA0.SINGLE.INTCTRL = TCA_SINGLE_CMP0_bm;
 	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc;
 	
-	// SPI Setup
-	PORTA.PIN4CTRL = PORT_PULLUPEN_bm | PORT_ISC_RISING_gc;
-	SPI0.CTRLA = SPI_ENABLE_bm;
-	SPI0.INTCTRL = SPI_IE_bm;
+	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
+	
+	
+	if(!(PORTA.IN & PIN4_bm))
+	{
+		PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
+		
+		USART0.BAUD = BAUDRATE;
+		USART0.CTRLA = USART_RXCIE_bm;
+		USART0.CTRLB = USART_RXEN_bm;
+		
+		#if USE_2X
+			USART0.CTRLB |= USART_RXMODE_CLK2X_gc;
+		#endif
+		
+		TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+	}
+	else
+	{
+		// SPI Setup
+		PORTA.PIN4CTRL |= PORT_ISC_RISING_gc;
+		
+		SPI0.CTRLA = SPI_ENABLE_bm;
+		SPI0.INTCTRL = SPI_IE_bm;
+	}
 	
 	// Enable interrupts globally
 	sei();

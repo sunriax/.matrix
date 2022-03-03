@@ -210,13 +210,13 @@ int main(void)
 		
 		if(eeprom_save != 0)
 		{
-			matrix_buffer2eeprom(matrix, (0x0F & eeprom_save));
+			matrix_buffer2eeprom(matrix, eeprom_save);
 			eeprom_save = 0;
 		}
 		
 		if(eeprom_load != 0)
 		{
-			matrix_eeprom2buffer(matrix, (0x0F & eeprom_load));
+			matrix_eeprom2buffer(matrix, eeprom_load);
 			eeprom_load = 0;
 		}
 	}

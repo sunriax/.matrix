@@ -1,3 +1,16 @@
+/* -----------------------------------------
+ * G.Raf^engineering
+ * www.sunriax.at
+ * -----------------------------------------
+ *    Platform: .matrix display controller
+ *    Hardware: ATtiny406
+ * -----------------------------------------
+ *     Version: 1.0 Release
+ *      Author: G.Raf
+ * Description:
+ *   .matrix display controller firmware
+ * -----------------------------------------
+ */ 
 
 #define F_CPU 16000000UL
 #define BAUDRATE ((64UL*F_CPU)/(16UL*9600UL))
@@ -61,7 +74,7 @@ ISR(PORTA_PORT_vect)
 				matrix[i] = 0x00;
 			}
 		break;
-		case 0x10:	// Display Enable
+		case 0x10:	// Display On/Off
 			if(0x01 & spi_data)
 			{
 				TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
@@ -171,9 +184,6 @@ ISR(USART0_RXC_vect)
 	copy = USART0.RXDATAL;
 }
 
-
-
-
 int main(void)
 {
 	// CLOCK Setup
@@ -190,9 +200,9 @@ int main(void)
 	
 	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
 	
-	
 	if(!(PORTA.IN & PIN4_bm))
 	{
+		PORTA.OUTSET = PIN5_bm;
 		PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
 		
 		USART0.BAUD = BAUDRATE;
@@ -216,17 +226,6 @@ int main(void)
 	
 	// Enable interrupts globally
 	sei();
-	
-	// Initial sequence
-	for (unsigned char y=0; y < 7; y++)
-	{
-		for (unsigned char x=0; x < 5; x++)
-		{
-			matrix[y] |= (1<<(4-x));
-			
-			_delay_ms(25);
-		}
-	}
 	
 	while (1)
 	{

@@ -1,3 +1,16 @@
+/* -----------------------------------------
+ * G.Raf^engineering
+ * www.sunriax.at
+ * -----------------------------------------
+ *    Platform: .matrix display controller
+ *    Hardware: ATtiny406
+ * -----------------------------------------
+ *     Version: 1.0 Release
+ *      Author: G.Raf
+ * Description:
+ *   Header file .matrix display library
+ * -----------------------------------------
+ */
 
 #ifndef MATRIX_H_
 #define MATRIX_H_

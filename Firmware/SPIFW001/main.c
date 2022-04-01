@@ -12,8 +12,16 @@
  * -----------------------------------------
  */ 
 
-#define F_CPU 16000000UL
-#define BAUDRATE ((64UL*F_CPU)/(16UL*9600UL))
+#define F_CPU 20000000UL
+
+#define BAUDRATE 9600UL
+// #define USE_U2X
+
+#ifdef USE_U2X
+	#define USART0_BAUD_RATE(BAUD_RATE) ((float)(F_CPU * 64 / (8 * (float)BAUD_RATE)) + 0.5)
+#else
+	#define USART0_BAUD_RATE(BAUD_RATE) ((float)(F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5)
+#endif
 
 #include <avr/io.h>
 #include <avr/cpufunc.h>
@@ -185,6 +193,8 @@ ISR(SPI0_INT_vect)
 
 ISR(USART0_RXC_vect)
 {
+	PORTA.OUTTGL = PIN5_bm;
+	
 	copy = USART0.RXDATAL;
 }
 
@@ -200,13 +210,10 @@ int main(void)
 	CLKCTRL.OSC20MCTRLA = CLKCTRL_RUNSTDBY_bm;
 
 	// PORT Setup
-	PORTA.DIRSET = PIN5_bm;
+	PORTA.DIRSET = PIN5_bm;				// Set LED to output
 	
-	PORTA.DIR &= ~PIN1_bm; /* Set MOSI pin direction to input */
-	PORTA.DIR |= PIN2_bm; /* Set MISO pin direction to output */
-	PORTA.DIR &= ~PIN3_bm; /* Set SCK pin direction to input */
-	PORTA.DIR &= ~PIN4_bm; /* Set SS pin direction to input */
-	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
+	PORTA.DIR &= ~PIN4_bm;				// Set SS to input
+	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;	// Enable pullup on SS
 	
 	// DISPLAY Update
 	matrix_setup();
@@ -215,32 +222,35 @@ int main(void)
 	TCA0.SINGLE.PER = 0x04FF;
 	TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm;
 	TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_NORMAL_gc;
-	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV8_gc /*| TCA_SINGLE_ENABLE_bm*/;
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV8_gc;
 	
-	
-	//if(!(PORTA.IN & PIN4_bm))
-	//{
-		//PORTA.OUTSET = PIN5_bm;
-		//PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
-		//
-		//USART0.BAUD = BAUDRATE;
-		//USART0.CTRLA = USART_RXCIE_bm;
-		//USART0.CTRLB = USART_RXEN_bm;
-		//
-		//#if USE_2X
-			//USART0.CTRLB |= USART_RXMODE_CLK2X_gc;
-		//#endif
-		//
-		//TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
-	//}
-	//else
-	//{
-		// SPI Setup
+	// UART Setup
+	if(!(PORTA.IN & PIN4_bm))
+	{
+		PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
+		
+		USART0.BAUD = (unsigned int)USART0_BAUD_RATE(BAUDRATE);
+		USART0.CTRLA = USART_RXCIE_bm;
+		USART0.CTRLB = USART_RXEN_bm;
+		
+		#if USE_U2X
+			USART0.CTRLB |= USART_RXMODE_CLK2X_gc;
+		#endif
+		
+		TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+	}
+	//SPI Setup
+	else
+	{
+		PORTA.DIR &= ~PIN1_bm;	// Set MOSI to input
+		PORTA.DIR |= PIN2_bm;	// Set MISO to output
+		PORTA.DIR &= ~PIN3_bm;	// Set SCK to input 
+		
 		PORTA.PIN4CTRL |= PORT_ISC_RISING_gc;
 		
 		SPI0.CTRLA = SPI_ENABLE_bm;
 		SPI0.INTCTRL = SPI_IE_bm;
-	//}
+	}
 	
 	// Enable interrupts globally
 	sei();
@@ -249,7 +259,7 @@ int main(void)
 	{
 		if(copy != '\0')
 		{	
-			// Copy ASCII-char to array
+			// Copy ASCII-char to diplay
 			matrix_char2buffer(copy, matrix);
 			copy = '\0';
 		}
@@ -267,4 +277,3 @@ int main(void)
 		}
 	}
 }
-

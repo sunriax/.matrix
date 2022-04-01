@@ -38,6 +38,7 @@ void matrix_init()
 		{
 			buffer[y] |= (1<<(4-x));
 			matrix_buffer(buffer);
+			_delay_ms(75);
 		}
 	}
 }
@@ -65,10 +66,10 @@ void matrix_string(const char *data)
 {
 	do 
 	{
-		matrix_char(*data);
+		matrix_char(*data++);
 		_delay_ms(MATRIX_STRING_PAUSE);
 		
-	} while ((++data) != '\0');
+	} while (*data != '\0');
 }
 
 void matrix_clear()
@@ -103,8 +104,7 @@ void matrix_prom_write(unsigned char address, unsigned char *buffer)
 	spi_transfer(MATRIX_EEPROM_WRITE | (0x0F & address));
 	spi_transfer(0x00);
 	spi_select(SPI_Disable);
-	
-	matrix_clear();
+	_delay_ms(50);
 }
 
 void matrix_prom_read(unsigned char address)
@@ -113,4 +113,5 @@ void matrix_prom_read(unsigned char address)
 	spi_transfer(MATRIX_EEPROM_READ | (0x0F & address));
 	spi_transfer(0x00);
 	spi_select(SPI_Disable);
+	_delay_ms(50);
 }

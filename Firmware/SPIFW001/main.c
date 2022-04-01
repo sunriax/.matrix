@@ -16,6 +16,7 @@
 #define BAUDRATE ((64UL*F_CPU)/(16UL*9600UL))
 
 #include <avr/io.h>
+#include <avr/cpufunc.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
@@ -48,9 +49,10 @@ volatile unsigned char matrix[] = {
 
 ISR(PORTA_PORT_vect)
 {
-	PORTA.OUTTGL = PIN5_bm;
-	
 	sei();	// Allow nested interrupts
+
+	// DATA transfer led
+	PORTA.OUTTGL = PIN5_bm;
 	
 	spi_pointer = 0;
 	
@@ -69,10 +71,7 @@ ISR(PORTA_PORT_vect)
 			copy = spi_data;
 		break;
 		case 0x09:	// CLEAR
-			for (unsigned char i=0; i < sizeof(matrix); i++)
-			{
-				matrix[i] = 0x00;
-			}
+			matrix_clear_buffer(matrix);
 		break;
 		case 0x10:	// Display On/Off
 			if(0x01 & spi_data)
@@ -131,6 +130,8 @@ ISR(PORTA_PORT_vect)
 		default:
 		break;
 	}
+	
+	PORTA.INTFLAGS = PIN4_bm;
 }
 
 ISR(TCA0_OVF_vect)
@@ -138,45 +139,48 @@ ISR(TCA0_OVF_vect)
 	matrix_row_clear();
 	matrix_column_clear();
 	
-	if((intensity + 1) % (++pixel_intensity))
-	{
-		matrix_row(pixel_y);
-		
+	//if((intensity + 1) % (++pixel_intensity))
+	//{
 		if(0x01 & (matrix[pixel_y]>>(4-pixel_x)))
 		{
+			matrix_row((6 - pixel_y));
 			matrix_column(pixel_x);
 		}
 		
-		pixel_x++;
-		
-		if(pixel_x >= 5)
+		if((++pixel_x) >= 5)
 		{
-			pixel_y++;
 			pixel_x = 0;
 			
-			if(pixel_y >= 7)
+			if((++pixel_y) >= 7)
 			{
 				pixel_y = 0;
 			}
 		}
 		
 		pixel_intensity = 0;
-	}
+	//}
+	
+	TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
 }
 
 ISR(SPI0_INT_vect)
-{
+{	
+	unsigned char data = SPI0.DATA;
+	
 	spi_pointer++;
 	
 	if(spi_pointer % 2)
 	{
-		spi_command = SPI0.DATA;
+		spi_command = data;
 	}
 	else
 	{
-		spi_data = SPI0.DATA;
+		spi_data = data;
 		spi_pointer = 0;
 	}
+	
+	SPI0.DATA = data;
+	SPI0.INTFLAGS = SPI_IF_bm;
 }
 
 ISR(USART0_RXC_vect)
@@ -187,42 +191,56 @@ ISR(USART0_RXC_vect)
 int main(void)
 {
 	// CLOCK Setup
-	CPU_CCP = 0x9D;
+	CCP = CCP_IOREG_gc;
 	CLKCTRL.MCLKCTRLA = CLKCTRL_CLKSEL_OSC20M_gc;
+	while(!(CLKCTRL.MCLKSTATUS & CLKCTRL_OSC20MS_bm));
+	
+	CCP = CCP_IOREG_gc;
+	CLKCTRL.MCLKCTRLB = 0x00;
+	CLKCTRL.OSC20MCTRLA = CLKCTRL_RUNSTDBY_bm;
 
 	// PORT Setup
+	PORTA.DIRSET = PIN5_bm;
+	
+	PORTA.DIR &= ~PIN1_bm; /* Set MOSI pin direction to input */
+	PORTA.DIR |= PIN2_bm; /* Set MISO pin direction to output */
+	PORTA.DIR &= ~PIN3_bm; /* Set SCK pin direction to input */
+	PORTA.DIR &= ~PIN4_bm; /* Set SS pin direction to input */
+	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
+	
+	// DISPLAY Update
 	matrix_setup();
 	
 	// TIMER Setup
-	TCA0.SINGLE.PER = 0xFF;
-	TCA0.SINGLE.INTCTRL = TCA_SINGLE_CMP0_bm;
-	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc;
+	TCA0.SINGLE.PER = 0x04FF;
+	TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm;
+	TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_NORMAL_gc;
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV8_gc /*| TCA_SINGLE_ENABLE_bm*/;
 	
-	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;
 	
-	if(!(PORTA.IN & PIN4_bm))
-	{
-		PORTA.OUTSET = PIN5_bm;
-		PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
-		
-		USART0.BAUD = BAUDRATE;
-		USART0.CTRLA = USART_RXCIE_bm;
-		USART0.CTRLB = USART_RXEN_bm;
-		
-		#if USE_2X
-			USART0.CTRLB |= USART_RXMODE_CLK2X_gc;
-		#endif
-		
-		TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
-	}
-	else
-	{
+	//if(!(PORTA.IN & PIN4_bm))
+	//{
+		//PORTA.OUTSET = PIN5_bm;
+		//PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
+		//
+		//USART0.BAUD = BAUDRATE;
+		//USART0.CTRLA = USART_RXCIE_bm;
+		//USART0.CTRLB = USART_RXEN_bm;
+		//
+		//#if USE_2X
+			//USART0.CTRLB |= USART_RXMODE_CLK2X_gc;
+		//#endif
+		//
+		//TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+	//}
+	//else
+	//{
 		// SPI Setup
 		PORTA.PIN4CTRL |= PORT_ISC_RISING_gc;
 		
 		SPI0.CTRLA = SPI_ENABLE_bm;
 		SPI0.INTCTRL = SPI_IE_bm;
-	}
+	//}
 	
 	// Enable interrupts globally
 	sei();
@@ -230,7 +248,7 @@ int main(void)
 	while (1)
 	{
 		if(copy != '\0')
-		{
+		{	
 			// Copy ASCII-char to array
 			matrix_char2buffer(copy, matrix);
 			copy = '\0';

@@ -576,8 +576,11 @@ void matrix_row(unsigned char row)
 {
 	switch (row)
 	{
+		case 0:
+			PORTA.OUTCLR = PIN7_bm;
+		break;
 		case 1:
-			PORTB.OUTCLR = PIN7_bm;
+			PORTB.OUTCLR = PIN1_bm;
 		break;
 		case 2:
 			PORTA.OUTCLR = PIN6_bm;
@@ -595,7 +598,6 @@ void matrix_row(unsigned char row)
 			PORTC.OUTCLR = PIN0_bm;
 		break;
 		default:
-			PORTA.OUTCLR = PIN7_bm;
 		break;
 	}
 }
@@ -611,19 +613,19 @@ void matrix_column(unsigned char column)
 	switch (column)
 	{
 		case 1:
-			PORTC.OUTCLR = PIN1_bm;
+			PORTC.OUTSET = PIN1_bm;
 		break;
 		case 2:
-			PORTB.OUTCLR = PIN4_bm;
+			PORTB.OUTSET = PIN4_bm;
 		break;
 		case 3:
-			PORTB.OUTCLR = PIN5_bm;
+			PORTB.OUTSET = PIN5_bm;
 		break;
 		case 4:
-			PORTC.OUTCLR = PIN2_bm;
+			PORTC.OUTSET = PIN2_bm;
 		break;
 		default:
-			PORTB.OUTCLR = PIN2_bm;
+			PORTB.OUTSET = PIN2_bm;
 		break;
 	}
 }
@@ -872,8 +874,16 @@ void matrix_char2buffer(char character, volatile unsigned char *buffer)
 		
 		for (unsigned char x=0; x < 5; x++)
 		{
-			buffer[y] |= (temp[x]<<(4 - x));
+			buffer[y] |= ((0x01 & (temp[x]>>y))<<x);
 		}
+	}
+}
+
+void matrix_clear_buffer(volatile unsigned char *buffer)
+{
+	for (unsigned char y=0; y < 7; y++)
+	{
+		buffer[y] = 0x00;
 	}
 }
 
@@ -887,13 +897,15 @@ void matrix_buffer2eeprom(volatile unsigned char *buffer, unsigned char address)
 		
 		for (unsigned char x=0; x < 7; x++)
 		{
-			temp[y] |= (buffer[x]<<(6 - x));
+			temp[y] |= ((0x01 & (buffer[x]>>y))<<x);
 		}
 	}
 	
+	matrix_clear_buffer(buffer);
+	
 	for (unsigned char i=0; i < sizeof(temp); i++)
 	{
-		eeprom_write_byte(&temp[i], (((0x0F & address) * 7) + i));
+		eeprom_write_byte((unsigned char*)(((0x0F & address) * 7) + i), temp[i]);
 	}
 }
 
@@ -912,7 +924,7 @@ void matrix_eeprom2buffer(volatile unsigned char *buffer, unsigned char address)
 		
 		for (unsigned char x=0; x < 5; x++)
 		{
-			buffer[y] |= (temp[x]<<(4 - x));
+			buffer[y] |= ((0x01 & (temp[x]>>y))<<x);
 		}
 	}
 }

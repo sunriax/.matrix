@@ -26,6 +26,7 @@ void matrix_column_clear();
 void matrix_row(unsigned char row);
 void matrix_row_clear();
 void matrix_char2buffer(char character, volatile unsigned char *buffer);
+void matrix_clear_buffer(volatile unsigned char *buffer);
 void matrix_buffer2eeprom(volatile unsigned char *buffer, unsigned char address);
 void matrix_eeprom2buffer(volatile unsigned char *buffer, unsigned char address);
 

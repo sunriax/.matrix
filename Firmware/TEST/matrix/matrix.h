@@ -51,12 +51,12 @@
 	#define MATRIX_CMD_REFRESH 0x12
 #endif
 
-#ifndef MATRIX_EEPROM_WRITE		// EEPROM write command
-	#define MATRIX_EEPROM_WRITE 0x20
+#ifndef MATRIX_EEPROM_READ		// EEPROM read command
+	#define MATRIX_EEPROM_READ 0x20
 #endif
 
-#ifndef MATRIX_EEPROM_READ		// EEPROM read command
-	#define MATRIX_EEPROM_READ 0x30
+#ifndef MATRIX_EEPROM_WRITE		// EEPROM write command
+	#define MATRIX_EEPROM_WRITE 0x30
 #endif
 
 #ifndef MATRIX_EEPROM_CHAR0	// EEPROM special character address 0
@@ -84,7 +84,7 @@
 
 
 #ifndef MATRIX_STRING_PAUSE		// Pause between characters (ms)
-	#define MATRIX_STRING_PAUSE 500
+	#define MATRIX_STRING_PAUSE 1000
 #endif
 
 #include <avr/io.h>

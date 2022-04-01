@@ -63,7 +63,7 @@
     (pcbplotparams
       (layerselection 0x00030ff_ffffffff)
       (disableapertmacros false)
-      (usegerberextensions true)
+      (usegerberextensions false)
       (usegerberattributes true)
       (usegerberadvancedattributes true)
       (creategerberjobfile true)
@@ -91,7 +91,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory "gerber/elecrow")
+      (outputdirectory "gerber")
     )
   )
 
@@ -459,7 +459,7 @@
     (property "Sheetname" "")
     (path "/8d9d748a-3289-4b90-8459-a0baacdd5d4c")
     (attr smd)
-    (fp_text reference "U1" (at 0 7.62) (layer "F.SilkS")
+    (fp_text reference "U1" (at 6.94 -5.28 270) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15)))
       (tstamp b5e1d796-f3d8-4363-a6bf-5bf078e880e8)
     )

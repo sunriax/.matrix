@@ -36,9 +36,9 @@ void matrix_init()
 	{
 		for (unsigned char x=0; x < 5; x++)
 		{
-			buffer[y] |= (1<<(4-x));
+			buffer[y] |= (1<<(4 - x));
 			matrix_buffer(buffer);
-			_delay_ms(75);
+			_delay_ms(200);
 		}
 	}
 }
@@ -77,22 +77,6 @@ void matrix_clear()
 	spi_select(SPI_Enable);
 	spi_transfer(MATRIX_CMD_CLEAR);
 	spi_transfer(0x00);
-	spi_select(SPI_Disable);
-}
-
-void matrix_intensity(unsigned char intensity)
-{
-	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_CMD_INTENSITY);
-	spi_transfer(intensity);
-	spi_select(SPI_Disable);
-}
-
-void matrix_refresh_rate(unsigned char rate)
-{
-	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_CMD_REFRESH);
-	spi_transfer(rate);
 	spi_select(SPI_Disable);
 }
 

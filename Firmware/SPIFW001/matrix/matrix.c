@@ -874,7 +874,7 @@ void matrix_char2buffer(char character, volatile unsigned char *buffer)
 		
 		for (unsigned char x=0; x < 5; x++)
 		{
-			buffer[y] |= ((0x01 & (temp[x]>>y))<<x);
+			buffer[y] |= ((0x01 & (temp[x]>>y))<<(4 - x));
 		}
 	}
 }

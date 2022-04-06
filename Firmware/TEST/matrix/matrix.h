@@ -19,6 +19,14 @@
 	#define F_CPU 12000000UL
 #endif
 
+#ifndef MATRIX_DISPLAYS
+	#define MATRIX_DISPLAYS 1
+#endif
+
+#ifndef MATRIX_CMD_NOP			// No operation
+	#define MATRIX_CMD_NOP 0x00
+#endif
+
 #ifndef MATRIX_CMD_ROW_START	// Address of 1. row
 	#define MATRIX_CMD_ROW_START 0x01
 #endif
@@ -43,12 +51,8 @@
 	#endif
 #endif
 
-#ifndef MATRIX_CMD_INTENSITY	// Command to setup display intensity (0 - 15)
-	#define MATRIX_CMD_INTENSITY 0x11
-#endif
-
 #ifndef MATRIX_CMD_REFRESH		// Command to setup display refresh rate (0 - 127)
-	#define MATRIX_CMD_REFRESH 0x12
+	#define MATRIX_CMD_REFRESH 0x11
 #endif
 
 #ifndef MATRIX_EEPROM_READ		// EEPROM read command
@@ -96,8 +100,6 @@ void matrix_buffer(unsigned char *buffer);
 void matrix_char(char data);
 void matrix_string(const char *data);
 void matrix_clear();
-void matrix_intensity(unsigned char intensity);
-void matrix_refresh_rate(unsigned char rate);
 void matrix_prom_write(unsigned char address, unsigned char *buffer);
 void matrix_prom_read(unsigned char address);
 

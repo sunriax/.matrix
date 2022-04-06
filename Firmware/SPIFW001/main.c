@@ -23,6 +23,8 @@
 	#define USART0_BAUD_RATE(BAUD_RATE) ((float)(F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5)
 #endif
 
+#define TIMER_PER 0x04FF
+
 #include <avr/io.h>
 #include <avr/cpufunc.h>
 #include <avr/interrupt.h>
@@ -36,11 +38,8 @@ volatile unsigned char spi_pointer;
 
 volatile unsigned char pixel_x;
 volatile unsigned char pixel_y;
-volatile unsigned char pixel_intensity;
 
 volatile unsigned char copy;
-volatile unsigned char intensity;
-volatile unsigned char rate;
 
 volatile unsigned char eeprom_save;
 volatile unsigned char eeprom_load;
@@ -93,12 +92,6 @@ ISR(PORTA_PORT_vect)
 				matrix_column_clear();
 			}
 		break;
-		case 0x11:	// Display intensity
-			intensity = (0x0F & spi_data);
-		break;
-		case 0x12:	// Display refresh rate
-			TCA0.SINGLE.PER = 0xFF - (0x7F & spi_data);
-		break;
 		case 0x20:	// Display EEPROM
 		case 0x21:
 		case 0x22:
@@ -147,32 +140,29 @@ ISR(TCA0_OVF_vect)
 	matrix_row_clear();
 	matrix_column_clear();
 	
-	//if((intensity + 1) % (++pixel_intensity))
-	//{
-		if(0x01 & (matrix[pixel_y]>>(4-pixel_x)))
-		{
-			matrix_row((6 - pixel_y));
-			matrix_column(pixel_x);
-		}
+	if(0x01 & (matrix[pixel_y]>>(4-pixel_x)))
+	{
+		matrix_row((6 - pixel_y));
+		matrix_column((4 - pixel_x));
+	}
+	
+	if((++pixel_x) >= 5)
+	{
+		pixel_x = 0;
 		
-		if((++pixel_x) >= 5)
+		if((++pixel_y) >= 7)
 		{
-			pixel_x = 0;
-			
-			if((++pixel_y) >= 7)
-			{
-				pixel_y = 0;
-			}
+			pixel_y = 0;
 		}
-		
-		pixel_intensity = 0;
-	//}
+	}
 	
 	TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
 }
 
 ISR(SPI0_INT_vect)
-{	
+{
+	sei();	// Allow nested interrupts
+	
 	unsigned char data = SPI0.DATA;
 	
 	spi_pointer++;
@@ -193,8 +183,9 @@ ISR(SPI0_INT_vect)
 
 ISR(USART0_RXC_vect)
 {
-	PORTA.OUTTGL = PIN5_bm;
+	sei();	// Allow nested interrupts
 	
+	PORTA.OUTTGL = PIN5_bm;
 	copy = USART0.RXDATAL;
 }
 
@@ -219,7 +210,7 @@ int main(void)
 	matrix_setup();
 	
 	// TIMER Setup
-	TCA0.SINGLE.PER = 0x04FF;
+	TCA0.SINGLE.PER = TIMER_PER;
 	TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm;
 	TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_NORMAL_gc;
 	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV8_gc;

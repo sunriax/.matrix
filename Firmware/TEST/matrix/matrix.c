@@ -23,11 +23,9 @@ void matrix_init()
 	//
 	// Details can be found in spi.c
 	spi_init(SPI_Master, SPI_MSB, SPI_Rising, SPI_Rising);
-	
-	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_CMD_MODE);
-	spi_transfer(MATRIX_DATA_MODE_ENABLE);
-	spi_select(SPI_Disable);
+
+	matrix_transfer_all(MATRIX_CMD_MODE);
+	matrix_transfer_all(MATRIX_DATA_MODE_ENABLE);	
 	
 	// Initial sequence
 	unsigned char buffer[7] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -37,65 +35,156 @@ void matrix_init()
 		for (unsigned char x=0; x < 5; x++)
 		{
 			buffer[y] |= (1<<(4 - x));
-			matrix_buffer(buffer);
+			matrix_buffer_all(buffer);
 			_delay_ms(200);
 		}
 	}
 }
 
-void matrix_buffer(unsigned char *buffer)
+void matrix_buffer(unsigned char display, unsigned char *buffer)
 {
 	for (unsigned char i=0; i < 7; i++)
 	{
-		spi_select(SPI_Enable);
-		spi_transfer((MATRIX_CMD_ROW_START + i));
-		spi_transfer(buffer[i]);
-		spi_select(SPI_Disable);
+		matrix_transfer(display, (MATRIX_CMD_ROW_START + i));
+		matrix_transfer(display, buffer[i]);
 	}
 }
 
-void matrix_char(char data)
+void matrix_buffer_all(unsigned char *buffer)
 {
-	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_CMD_ASCII);
-	spi_transfer(data);
-	spi_select(SPI_Disable);
+	for (unsigned char i=0; i < 7; i++)
+	{
+		matrix_transfer_all((MATRIX_CMD_ROW_START + i));
+		matrix_transfer_all(buffer[i]);
+	}
 }
 
+void matrix_char(unsigned char display, char data)
+{
+	matrix_transfer(display, MATRIX_CMD_ASCII);
+	matrix_transfer(display, data);
+}
+
+// Word: TEXT
+// Parameter: MATRIX_DISPLAYS 3
+//
+// run	count	data
+// 1.	0		T
+// 2.	1		E
+// 3.	2		X
+//    data - 2 | count = 0
+// 1.	0		E
+// 2.	1		X
+// 3.	2		T
+//	  data - 2 | count = 0	
+// 1.	0		X
+// 2.	1		T
+// 3.	2		\0
+//	  data - 2 | count = 0
+// 1.	0		T
+// 2.	1       \0
+// 3.	2		?
+//    data - 2 | count = 0
+// 1.   0		\0
+// END
+
+// Find a better solution!!!
 void matrix_string(const char *data)
 {
+	unsigned char end = 0;
+	unsigned char count = 0;
+	
 	do 
 	{
-		matrix_char(*data++);
-		_delay_ms(MATRIX_STRING_PAUSE);
+		if(count == 0 && *data == '\0')
+		{
+			break;
+		}
 		
-	} while (*data != '\0');
-}
+		if(data == '\0')
+		{
+			end++;
+		}
+		
+		if(end > 0)
+		{
+			end++;
+		}
+		else
+		{
+			matrix_char(count, *data);
+			data++;
+		}
+		
+		if((++count) >= MATRIX_DISPLAYS)
+		{
+			count = 0;
+			end = 0;
+			data -= (MATRIX_DISPLAYS - 1);
+			_delay_ms(MATRIX_STRING_PAUSE);
+			matrix_clear_all();
+		}
+//#if MATRIX_DISPLAYS < 2
+		//_delay_ms(MATRIX_STRING_PAUSE);
+//#else
+//#endif
 
-void matrix_clear()
-{
-	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_CMD_CLEAR);
-	spi_transfer(0x00);
-	spi_select(SPI_Disable);
-}
-
-void matrix_prom_write(unsigned char address, unsigned char *buffer)
-{
-	matrix_buffer(buffer);
+	} while (1);
 	
-	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_EEPROM_WRITE | (0x0F & address));
-	spi_transfer(0x00);
-	spi_select(SPI_Disable);
+	matrix_clear_all();
+}
+
+void matrix_clear(unsigned char display)
+{
+	matrix_transfer(display, MATRIX_CMD_CLEAR);
+	matrix_transfer(display, 0x00);
+}
+
+void matrix_clear_all()
+{
+	matrix_transfer_all(MATRIX_CMD_CLEAR);
+	matrix_transfer_all(0x00);
+}
+
+void matrix_prom_write(unsigned char display, unsigned char address, unsigned char *buffer)
+{
+	matrix_buffer(display, buffer);
+	
+	matrix_transfer(display, MATRIX_EEPROM_WRITE | (0x0F & address));
+	matrix_transfer(display, 0x00);
 	_delay_ms(50);
 }
 
-void matrix_prom_read(unsigned char address)
+void matrix_prom_read(unsigned char display, unsigned char address)
+{
+	matrix_transfer(display, MATRIX_EEPROM_READ | (0x0F & address));
+	matrix_transfer(display, 0x00);
+	_delay_ms(50);
+}
+
+void matrix_transfer(unsigned char display, unsigned char transfer)
 {
 	spi_select(SPI_Enable);
-	spi_transfer(MATRIX_EEPROM_READ | (0x0F & address));
-	spi_transfer(0x00);
+	for (unsigned char d=0; d < MATRIX_DISPLAYS; d++)
+	{
+		if(d == (MATRIX_DISPLAYS - 1 - display))
+		{
+			spi_transfer(transfer);
+		}
+		else
+		{
+			spi_transfer(0x00);
+		}
+	}
 	spi_select(SPI_Disable);
-	_delay_ms(50);
+}
+
+void matrix_transfer_all(unsigned char transfer)
+{
+	spi_select(SPI_Enable);
+	for (unsigned char d=0; d < MATRIX_DISPLAYS; d++)
+	{
+		spi_transfer(transfer);
+	}
+	spi_select(SPI_Disable);
 }

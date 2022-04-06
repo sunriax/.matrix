@@ -20,7 +20,7 @@
 #endif
 
 #ifndef MATRIX_DISPLAYS
-	#define MATRIX_DISPLAYS 1
+	#define MATRIX_DISPLAYS 2
 #endif
 
 #ifndef MATRIX_CMD_NOP			// No operation
@@ -96,11 +96,15 @@
 #include "../spi/spi.h"
 
 void matrix_init();
-void matrix_buffer(unsigned char *buffer);
-void matrix_char(char data);
+void matrix_buffer(unsigned char display, unsigned char *buffer);
+void matrix_buffer_all(unsigned char *buffer);
+void matrix_char(unsigned char display, char data);
 void matrix_string(const char *data);
-void matrix_clear();
-void matrix_prom_write(unsigned char address, unsigned char *buffer);
-void matrix_prom_read(unsigned char address);
+void matrix_clear(unsigned char display);
+void matrix_clear_all();
+void matrix_prom_write(unsigned char display, unsigned char address, unsigned char *buffer);
+void matrix_prom_read(unsigned char display, unsigned char address);
+void matrix_transfer(unsigned char display, unsigned char transfer);
+void matrix_transfer_all(unsigned char transfer);
 
 #endif /* MATRIX_H_ */

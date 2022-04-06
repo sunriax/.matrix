@@ -32,8 +32,8 @@
 
 #include "matrix/matrix.h"
 
+volatile unsigned char spi_buffer;
 volatile unsigned char spi_command;
-volatile unsigned char spi_data;
 volatile unsigned char spi_pointer;
 
 volatile unsigned char pixel_x;
@@ -60,76 +60,88 @@ ISR(PORTA_PORT_vect)
 
 	// DATA transfer led
 	PORTA.OUTTGL = PIN5_bm;
-	
-	spi_pointer = 0;
-	
-	switch (spi_command)
+
+	spi_pointer++;
+
+	if(spi_pointer % 2)
 	{
-		case 0x01:	// ROW 1
-		case 0x02:	// ROW 2
-		case 0x03:	// ROW 3
-		case 0x04:	// ROW 4
-		case 0x05:	// ROW 5
-		case 0x06:	// ROW 6
-		case 0x07:	// ROW 7
-			matrix[(spi_command - 1)] = spi_data;
-		break;
-		case 0x08:	// Initiate ASCII copy
-			copy = spi_data;
-		break;
-		case 0x09:	// CLEAR
-			matrix_clear_buffer(matrix);
-		break;
-		case 0x10:	// Display On/Off
-			if(0x01 & spi_data)
-			{
-				TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
-			}
-			else
-			{
-				TCA0.SINGLE.CTRLA &= ~TCA_SINGLE_ENABLE_bm;
-				matrix_row_clear();
-				matrix_column_clear();
-			}
-		break;
-		case 0x20:	// Display EEPROM
-		case 0x21:
-		case 0x22:
-		case 0x23:
-		case 0x24:
-		case 0x25:
-		case 0x26:
-		case 0x27:
-		case 0x28:
-		case 0x29:
-		case 0x2A:
-		case 0x2B:
-		case 0x2C:
-		case 0x2D:
-		case 0x2E:
-		case 0x2F:
-			eeprom_load = spi_command;
-		break;
-		case 0x30:	// Copy matrix content to EEPROM
-		case 0x31:
-		case 0x32:
-		case 0x33:
-		case 0x34:
-		case 0x35:
-		case 0x36:
-		case 0x37:
-		case 0x38:
-		case 0x39:
-		case 0x3A:
-		case 0x3B:
-		case 0x3C:
-		case 0x3D:
-		case 0x3E:
-		case 0x3F:
-			eeprom_save = spi_command;
-		break;
-		default:
-		break;
+		spi_command = spi_buffer;
+	}
+	else
+	{
+		spi_buffer;
+		spi_pointer = 0;
+	
+		switch (spi_command)
+		{
+			case 0x01:	// ROW 1
+			case 0x02:	// ROW 2
+			case 0x03:	// ROW 3
+			case 0x04:	// ROW 4
+			case 0x05:	// ROW 5
+			case 0x06:	// ROW 6
+			case 0x07:	// ROW 7
+				matrix[(spi_command - 1)] = spi_buffer;
+			break;
+			case 0x08:	// Initiate ASCII copy
+				copy = spi_buffer;
+			break;
+			case 0x09:	// CLEAR
+				matrix_clear_buffer(matrix);
+			break;
+			case 0x10:	// Display On/Off
+				if(0x01 & spi_buffer)
+				{
+					TCA0.SINGLE.CTRLA |= TCA_SINGLE_ENABLE_bm;
+				}
+				else
+				{
+					TCA0.SINGLE.CTRLA &= ~TCA_SINGLE_ENABLE_bm;
+					matrix_row_clear();
+					matrix_column_clear();
+				}
+			break;
+			case 0x20:	// Display EEPROM
+			case 0x21:
+			case 0x22:
+			case 0x23:
+			case 0x24:
+			case 0x25:
+			case 0x26:
+			case 0x27:
+			case 0x28:
+			case 0x29:
+			case 0x2A:
+			case 0x2B:
+			case 0x2C:
+			case 0x2D:
+			case 0x2E:
+			case 0x2F:
+				eeprom_load = spi_command;
+			break;
+			case 0x30:	// Copy matrix content to EEPROM
+			case 0x31:
+			case 0x32:
+			case 0x33:
+			case 0x34:
+			case 0x35:
+			case 0x36:
+			case 0x37:
+			case 0x38:
+			case 0x39:
+			case 0x3A:
+			case 0x3B:
+			case 0x3C:
+			case 0x3D:
+			case 0x3E:
+			case 0x3F:
+				eeprom_save = spi_command;
+			break;
+			default:
+			break;
+		}
+		
+		spi_command = 0x00;
 	}
 	
 	PORTA.INTFLAGS = PIN4_bm;
@@ -163,21 +175,9 @@ ISR(SPI0_INT_vect)
 {
 	sei();	// Allow nested interrupts
 	
-	unsigned char data = SPI0.DATA;
+	spi_buffer = SPI0.DATA;
+	SPI0.DATA = spi_buffer;
 	
-	spi_pointer++;
-	
-	if(spi_pointer % 2)
-	{
-		spi_command = data;
-	}
-	else
-	{
-		spi_data = data;
-		spi_pointer = 0;
-	}
-	
-	SPI0.DATA = data;
 	SPI0.INTFLAGS = SPI_IF_bm;
 }
 

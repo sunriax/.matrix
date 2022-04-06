@@ -55,7 +55,7 @@ const __flash unsigned char E[] = {
 };
 
 const __flash unsigned char F[] = {
-	0b0111111,
+	0b1111111,
 	0b0001001,
 	0b0001001,
 	0b0001001,
@@ -112,17 +112,17 @@ const __flash unsigned char L[] = {
 
 const __flash unsigned char M[] = {
 	0b1111111,
-	0b0000110,
-	0b1111000,
-	0b0000110,
+	0b0000010,
+	0b1111100,
+	0b0000010,
 	0b1111111
 };
 
 const __flash unsigned char N[] = {
 	0b1111111,
-	0b0000011,
+	0b0000010,
 	0b0011100,
-	0b1100000,
+	0b0100000,
 	0b1111111
 };
 
@@ -145,17 +145,17 @@ const __flash unsigned char P[] = {
 const __flash unsigned char Q[] = {
 	0b0111110,
 	0b1000001,
-	0b1000001,
-	0b1100001,
-	0b1111110
+	0b1010001,
+	0b0100001,
+	0b1011110
 };
 
 const __flash unsigned char R[] = {
 	0b1111111,
+	0b0001001,
 	0b0011001,
 	0b0101001,
-	0b1001001,
-	0b0000110
+	0b1000110
 };
 
 const __flash unsigned char S[] = {
@@ -183,26 +183,26 @@ const __flash unsigned char U[] = {
 };
 
 const __flash unsigned char V[] = {
-	0b0000011,
-	0b0011100,
-	0b1100000,
-	0b0011100,
-	0b0000011
+	0b0011111,
+	0b0100000,
+	0b1000000,
+	0b0100000,
+	0b0011111
 };
 
 const __flash unsigned char W[] = {
 	0b0111111,
 	0b1000000,
-	0b0111111,
+	0b0111100,
 	0b1000000,
 	0b0111111
 };
 
 const __flash unsigned char X[] = {
 	0b1000001,
-	0b0110110,
+	0b0100010,
 	0b0011100,
-	0b0110110,
+	0b0100010,
 	0b1000001
 };
 
@@ -247,7 +247,7 @@ const __flash unsigned char TWO[] = {
 };
 
 const __flash unsigned char THREE[] = {
-	0b0000000,
+	0b0100010,
 	0b1000001,
 	0b1001001,
 	0b1001001,
@@ -279,10 +279,10 @@ const __flash unsigned char SIX[] = {
 };
 
 const __flash unsigned char SEVEN[] = {
-	0b1100001,
-	0b0110001,
-	0b0011001,
-	0b0001101,
+	0b1000001,
+	0b0100001,
+	0b0010001,
+	0b0001001,
 	0b0000111
 };
 
@@ -320,49 +320,49 @@ const __flash unsigned char EXCLAMATIONMARK[] = {
 
 const __flash unsigned char QUOTATIONMARK[] = {
 	0b0000000,
-	0b0000000,
 	0b0000011,
+	0b0000000,
 	0b0000011,
 	0b0000000
 };
 
 const __flash unsigned char HASHTAG[] = {
-	0b0100100,
-	0b1111110,
-	0b0100100,
-	0b1111110,
-	0b0100100
+	0b0010100,
+	0b1111111,
+	0b0010100,
+	0b1111111,
+	0b0010100
 };
 
 const __flash unsigned char DOLLAR[] = {
-	0b0010010,
+	0b0100100,
 	0b0101010,
 	0b1111111,
 	0b0101010,
-	0b0100100
+	0b0010010
 };
 
 const __flash unsigned char PERCENT[] = {
 	0b0100000,
 	0b0010100,
 	0b0001000,
-	0b0100100,
+	0b0010100,
 	0b0000010
 };
 
 const __flash unsigned char AND[] = {
 	0b0110110,
-	0b1001001,
-	0b1001001,
-	0b1001010,
-	0b1110000
+	0b1001101,
+	0b1010010,
+	0b0100000,
+	0b1010000
 };
 
 const __flash unsigned char SINGLEQUOTE[] = {
 	0b0000000,
 	0b0000000,
-	0b0000000,
 	0b0000011,
+	0b0000000,
 	0b0000000
 };
 
@@ -391,43 +391,43 @@ const __flash unsigned char STAR[] = {
 };
 
 const __flash unsigned char PLUS[] = {
-	0b0000000,
 	0b0001000,
-	0b0011100,
 	0b0001000,
-	0b0000000
+	0b0111110,
+	0b0001000,
+	0b0001000
 };
 
 const __flash unsigned char COMMA[] = {
 	0b0000000,
+	0b1000000,
+	0b0100000,
 	0b0000000,
-	0b0000000,
-	0b1100000,
 	0b0000000
 };
 
 const __flash unsigned char MINUS[] = {
-	0b0000000,
 	0b0001000,
 	0b0001000,
 	0b0001000,
-	0b0000000
+	0b0001000,
+	0b0001000
 };
 
 const __flash unsigned char DOT[] = {
 	0b0000000,
 	0b0000000,
-	0b0000000,
 	0b1000000,
+	0b0000000,
 	0b0000000
 };
 
 const __flash unsigned char SLASH[] = {
-	0b0000000,
-	0b1100000,
-	0b0111110,
-	0b0000011,
-	0b0000000
+	0b0100000,
+	0b0010000,
+	0b0001000,
+	0b0000100,
+	0b0000010
 };
 
 const __flash unsigned char COLON[] = {
@@ -440,8 +440,8 @@ const __flash unsigned char COLON[] = {
 
 const __flash unsigned char SEMICOLON[] = {
 	0b0000000,
-	0b0000000,
-	0b1100100,
+	0b1000000,
+	0b0100100,
 	0b0000000,
 	0b0000000
 };
@@ -479,11 +479,11 @@ const __flash unsigned char QUESTIONMARK[] = {
 };
 
 const __flash unsigned char AT[] = {
-	0b0111110,
-	0b1000001,
+	0b0110010,
 	0b1001001,
-	0b1010101,
-	0b1011100
+	0b1111001,
+	0b1000001,
+	0b1111110
 };
 
 const __flash unsigned char SQUAREBRACEOPEN[] = {
@@ -495,11 +495,11 @@ const __flash unsigned char SQUAREBRACEOPEN[] = {
 };
 
 const __flash unsigned char BACKSLASH[] = {
-	0b0000000,
-	0b0000011,
-	0b01111100,
-	0b1100000,
-	0b0000000
+	0b0000010,
+	0b0000100,
+	0b0001000,
+	0b0010000,
+	0b0100000
 };
 
 const __flash unsigned char SQUAREBRACECLOSE[] = {
@@ -519,18 +519,18 @@ const __flash unsigned char POWEROF[] = {
 };
 
 const __flash unsigned char UNDERLINE[] = {
-	0b0000000,
 	0b1000000,
 	0b1000000,
 	0b1000000,
-	0b0000000
+	0b1000000,
+	0b1000000
 };
 
 const __flash unsigned char CURVEDBRACEOPEN[] = {
 	0b0001000,
-	0b0110110,
+	0b0111110,
 	0b1000001,
-	0b0000000,
+	0b1000001,
 	0b0000000
 };
 
@@ -544,9 +544,9 @@ const __flash unsigned char PIPE[] = {
 
 const __flash unsigned char CURVEDBRACECLOSE[] = {
 	0b0000000,
-	0b0000000,
 	0b1000001,
-	0b0110110,
+	0b1000001,
+	0b0111110,
 	0b0001000
 };
 

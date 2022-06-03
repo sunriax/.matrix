@@ -18,17 +18,17 @@ jobs:
     - uses: INTI-CMNB/KiBot@v2_k6
       with:
         # Required - kibot config file
-        config: config.kibot.yaml
+        config: './PCB/config.kibot.yaml'
         # optional - prefix to output defined in config
         dir: output
         # optional - schematic file
-        schema: 'matrix.kicad_sch'
+        schema: './PCB/matrix.kicad_sch'
         # optional - PCB design file
-        board: 'matrix.kicad_pcb'
+        board: './PCB/matrix.kicad_pcb'
     - name: upload results
       uses: actions/upload-artifact@v2
       with:
         name: output
-        path: output
+        path: './PCB/output'
         
         

@@ -44,6 +44,7 @@ int main(void)
 		0b11111
 	};
 	
+	// Only one time necessary
 	//matrix_prom_write(0, MATRIX_EEPROM_CHAR0, buffer);
 	//matrix_prom_write(1, MATRIX_EEPROM_CHAR0, buffer);
 	
@@ -59,11 +60,22 @@ int main(void)
 			
 			c++;
 			
-			if(c > 126)
-				c = '!';
-				
-			matrix_char(0, c);
-			matrix_char(1, c);
+			if(c == 127)
+			{
+				matrix_prom_read(0, MATRIX_EEPROM_CHAR0);
+				matrix_prom_read(1, MATRIX_EEPROM_CHAR0);
+			}
+			else if(c > 127)
+			{
+				c = 32;
+				matrix_char(0, c);
+				matrix_char(1, c);
+			} 
+			else
+			{
+				matrix_char(0, c);
+				matrix_char(1, c);
+			}
 			
 			while(!(PINA & (1<<PINA0)));
 		}
@@ -73,24 +85,41 @@ int main(void)
 			
 			c--;
 			
-			if(c < 33)
-				c = '~';
-			
-			matrix_char(0, c);
-			matrix_char(1, c);
+			if(c == 31)
+			{
+				matrix_prom_read(0, MATRIX_EEPROM_CHAR0);
+				matrix_prom_read(1, MATRIX_EEPROM_CHAR0);
+			}
+			else if(c < 31)
+			{
+				c = 126;
+				matrix_char(0, c);
+				matrix_char(1, c);
+			}
+			else
+			{
+				matrix_char(0, c);
+				matrix_char(1, c);
+			}
 			
 			while(!(PINA & (1<<PINA1)));
 		}
+		else if(!(PINA & (1<<PINA2)))
+		{
+			_delay_ms(5);
+			
+			matrix_buffer_all(buffer);
+		
+			while(!(PINA & (1<<PINA2)));
+		}
+		else if(!(PINA & (1<<PINA3)))
+		{
+			_delay_ms(5);
+			
+			matrix_string("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~");
+		
+			while(!(PINA & (1<<PINA3)));
+		}
 		_delay_ms(5);
-		
-		
-	    //_delay_ms(1000);
-	    //matrix_buffer_all(buffer);
-	    //_delay_ms(1000);
-	    //matrix_prom_read(0, MATRIX_EEPROM_CHAR0);
-	    //matrix_prom_read(1, MATRIX_EEPROM_CHAR0);
-		//_delay_ms(1000);
-		//matrix_string("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~");
-		//_delay_ms(500);
     }
 }

@@ -65,29 +65,6 @@ void matrix_char(unsigned char display, char data)
 	matrix_transfer(display, data);
 }
 
-// Word: TEXT
-// Parameter: MATRIX_DISPLAYS 3
-//
-// run	count	data
-// 1.	0		T
-// 2.	1		E
-// 3.	2		X
-//    data - 2 | count = 0
-// 1.	0		E
-// 2.	1		X
-// 3.	2		T
-//	  data - 2 | count = 0	
-// 1.	0		X
-// 2.	1		T
-// 3.	2		\0
-//	  data - 2 | count = 0
-// 1.	0		T
-// 2.	1       \0
-// 3.	2		?
-//    data - 2 | count = 0
-// 1.   0		\0
-// END
-
 // Find a better solution!!!
 void matrix_string(const char *data)
 {

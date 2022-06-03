@@ -1317,6 +1317,11 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 42dd53b0-1589-49a2-acbf-951a8a1d04d0)
   )
+  (polyline (pts (xy 109.22 25.4) (xy 109.22 35.56))
+    (stroke (width 0.25) (type solid) (color 0 0 0 0))
+    (uuid 44d2b700-098f-40c3-858b-4ad13503f5ba)
+  )
+
   (wire (pts (xy 57.15 44.45) (xy 63.5 44.45))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid 45daf3a4-0abd-48ae-bf10-035e03975b57)
@@ -1651,6 +1656,11 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid ddb13e55-09c4-43e9-8b18-52c0a72312ae)
   )
+  (polyline (pts (xy 204.216 25.4) (xy 204.216 35.56))
+    (stroke (width 0.25) (type solid) (color 0 0 0 0))
+    (uuid de978fb5-ec4d-4db0-b38b-eb842e594905)
+  )
+
   (wire (pts (xy 172.72 127) (xy 156.718 127))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid e043669e-d067-4a4b-8f51-eb005b57edb6)
@@ -1674,6 +1684,11 @@
   (bus (pts (xy 138.43 137.16) (xy 88.9 137.16))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid e82e0d0d-31ce-41e5-8345-5d87bc746c22)
+  )
+
+  (polyline (pts (xy 204.216 35.56) (xy 109.22 35.56))
+    (stroke (width 0.25) (type solid) (color 0 0 0 0))
+    (uuid e987b886-cfff-40a7-b52a-c5ebea6eb36e)
   )
 
   (wire (pts (xy 138.43 56.515) (xy 144.78 56.515))
@@ -1701,6 +1716,11 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid f2928b67-66d1-4200-828b-18703c8741c0)
   )
+  (polyline (pts (xy 109.22 25.4) (xy 204.216 25.4))
+    (stroke (width 0.25) (type solid) (color 0 0 0 0))
+    (uuid f3d107ca-69bc-4032-a0a6-7ef5acdc8d77)
+  )
+
   (bus (pts (xy 220.98 137.16) (xy 218.44 137.16))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid f685986b-cd6b-4c48-a9e9-9062a7971a1a)
@@ -1730,6 +1750,21 @@
   (wire (pts (xy 226.06 116.84) (xy 226.06 134.62))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid fe1b4fc4-2b57-47b0-9f9f-ecc6ef394630)
+  )
+
+  (text "!" (at 110.49 34.29 0)
+    (effects (font (size 5 5)) (justify left bottom))
+    (uuid 95a40d19-41c6-4680-9b37-9cb1bed1a413)
+  )
+  (text "*Additional information can be found at https://github.com/sunriax/.matrix"
+    (at 88.9 152.4 0)
+    (effects (font (size 2 2)) (justify left bottom))
+    (uuid bbfddde2-4f75-44b8-ade5-03768c83e2be)
+  )
+  (text "If PA4 (SS) is LOW during startup UART mode is enabled.\nPA2 (MISO) changes to RXD and SPI is disabled"
+    (at 113.792 33.782 0)
+    (effects (font (size 2 2) (thickness 0.4) bold) (justify left bottom))
+    (uuid bead2789-cf29-4cdd-ad3a-a7fd6922e223)
   )
 
   (label "MOSI" (at 130.175 88.9 0)

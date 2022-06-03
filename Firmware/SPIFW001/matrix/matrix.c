@@ -303,11 +303,11 @@ const __flash unsigned char NINE[] = {
 };
 
 const __flash unsigned char SPACE[] = {
-	0b1000110,
-	0b1001001,
-	0b1001001,
-	0b1001001,
-	0b0111110
+	0b0000000,
+	0b0000000,
+	0b0000000,
+	0b0000000,
+	0b0000000
 };
 
 const __flash unsigned char EXCLAMATIONMARK[] = {

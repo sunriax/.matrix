@@ -203,7 +203,7 @@ int main(void)
 	// PORT Setup
 	PORTA.DIRSET = PIN5_bm;				// Set LED to output
 	
-	PORTA.DIR &= ~PIN4_bm;				// Set SS to input
+	PORTA.DIRCLR = PIN4_bm;				// Set SS to input
 	PORTA.PIN4CTRL = PORT_PULLUPEN_bm;	// Enable pullup on SS
 	
 	// DISPLAY Update
@@ -220,7 +220,7 @@ int main(void)
 	{
 		PORTMUX.CTRLB = PORTMUX_USART0_ALTERNATE_gc;
 		
-		USART0.BAUD = (unsigned int)USART0_BAUD_RATE(BAUDRATE);
+		USART0.BAUD = (unsigned int)USART0_BAUD_RATE(BAUDRATE);
 		USART0.CTRLA = USART_RXCIE_bm;
 		USART0.CTRLB = USART_RXEN_bm;
 		
@@ -250,7 +250,6 @@ int main(void)
 	{
 		if(copy != '\0')
 		{	
-			// Copy ASCII-char to diplay
 			matrix_char2buffer(copy, matrix);
 			copy = '\0';
 		}

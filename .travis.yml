@@ -16,7 +16,9 @@ install:
     git --version
     avr-gcc --version
     make --version
-  
+    wget http://packs.download.atmel.com/Atmel.ATtiny_DFP.2.0.368.atpack
+    unzip *.atpack -d ./Firnmware/DFP
+
 before_script:
   - set -e
   - |
@@ -30,8 +32,8 @@ before_script:
     cd ..
     mkdir DISPLAY
     cd DISPLAY
-    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -c ../Firmware/DISPLAY/main.c
-    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -c ../Firmware/DISPLAY/matrix/matrix.c
+    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/2.0.368/gcc/dev/attiny406 -I ../Firmware/DFP/2.0.368/include -c ../Firmware/DISPLAY/main.c
+    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/2.0.368/gcc/dev/attiny406 -I ../Firmware/DFP/2.0.368/include -c ../Firmware/DISPLAY/matrix/matrix.c
   - cd ..
 
 script:
@@ -40,7 +42,7 @@ script:
     avr-objcopy -j .text -j .data -O ihex test.elf test.hex
     avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
   - |
-    avr-gcc -g -mmcu=attiny406 -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
+    avr-gcc -g -mmcu=attiny406 -B ../Firmware/DFP/2.0.368/gcc/dev/attiny406 -I ../Firmware/DFP/2.0.368/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
     avr-objcopy -j .text -j .data -O ihex display.elf display.hex
     avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
 

@@ -1,19 +1,17 @@
-ID;Bezeichner;Gehäuse;Stückzahl;Bezeichnung;Anbieter und Referenz;;;;;
-1;R2;R_1206_3216Metric;1;140;DigiKey;RMCF1206FT140R;Digikey;;;
-2;R5,R3,R4,R6,R7;R_1206_3216Metric;5;0;;;;;;
-3;JP1;PinHeader_1x02_P2.54mm_Horizontal;1; ;RS;siehe Pos. 14;RS;;;
-4;H1,H2;MountingHole_3.2mm_M3_DIN965_Pad;2; ;;;;;;
-5;C5;C_1206_3216Metric;1;10n;RS;264-4141;RS;;;
-6;DS1;DIPS3810W50P254L3765H870Q14N;1;TA20-11SRWA;RS;451-6650;RS;;;
-7;U1;SOIC-20W_7.5x12.8mm_P1.27mm;1;ATtiny406-S;DigiKey;ATTINY406-SNRTR-ND;DigiKey;;;
-8;R1;R_1206_3216Metric;1;330;RS;223-2186;RS;;;
-9;C4,C3;C_1206_3216Metric;2;100n;RS;133-5654;RS;;;
-10;D1;LED_0805_2012Metric;1;LED;RS;654-5773;RS;;;
-11;SW1;SW_SPST;1;SW_Push;RS;479-1491;RS;;;
-12;C2,C1;CP_Elec_4x5.8;2;10u;RS;565-633;RS;;;
-13;J2;PinSocket_1x06_P2.54mm_Horizontal;1;Conn_01x06_Female;RS;765-5676;RS;;;
-14;J1;PinHeader_1x06_P2.54mm_Horizontal;1;Conn_01x06_Male;RS;251-8654;RS;;;
-15;;Buchsenleiste;2;;RS;267-7400;RS;;;
-16;;Leiterplatte;50;76;;;multi-cb;;;
-;;;;;;;;;;
-;;;;;;;;;;
+ID,Bezeichner,GehÃ¤use,StÃ¼ckzahl,Bezeichnung,Anbieter und Referenz,,,,,
+1,R2,R_1206_3216Metric,1,140,DigiKey,RMCF1206FT140R,Digikey,,,
+2,R5/R3/R4/R6/R7,R_1206_3216Metric,5,0,,,,,,
+3,JP1,PinHeader_1x02_P2.54mm_Horizontal,1, ,RS,siehe Pos. 14,RS,,,
+4,H1/H2,MountingHole_3.2mm_M3_DIN965_Pad,2, ,,,,,,
+5,C5,C_1206_3216Metric,1,10n,RS,264-4141,RS,,,
+6,DS1,DIPS3810W50P254L3765H870Q14N,1,TA20-11SRWA,RS,451-6650,RS,,,
+7,U1,SOIC-20W_7.5x12.8mm_P1.27mm,1,ATtiny406-S,DigiKey,ATTINY406-SNRTR-ND,DigiKey,,,
+8,R1,R_1206_3216Metric,1,330,RS,223-2186,RS,,,
+9,C4/C3,C_1206_3216Metric,2,100n,RS,133-5654,RS,,,
+10,D1,LED_0805_2012Metric,1,LED,RS,654-5773,RS,,,
+11,SW1,SW_SPST,1,SW_Push,RS,479-1491,RS,,,
+12,C2/C1,CP_Elec_4x5.8,2,10u,RS,565-633,RS,,,
+13,J2,PinSocket_1x06_P2.54mm_Horizontal,1,Conn_01x06_Female,RS,765-5676,RS,,,
+14,J1,PinHeader_1x06_P2.54mm_Horizontal,1,Conn_01x06_Male,RS,251-8654,RS,,,
+15,,Buchsenleiste,2,,RS,267-7400,RS,,,
+16,,Leiterplatte,50,76,,,multi-cb,,,

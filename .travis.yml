@@ -46,7 +46,7 @@ script:
     ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex test.elf test.hex
     ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
   - |
-    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=attiny406 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=attiny406 -B ./Firmware/DFP/gcc/dev/attiny406 -I ./Firmware/DFP/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
     ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex display.elf display.hex
     ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
 

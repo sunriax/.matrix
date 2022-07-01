@@ -1,5 +1,4 @@
-name: build-firmware
-
+name: build-release
 on:
   push:
     tags:
@@ -15,7 +14,7 @@ jobs:
       run: |
         wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-3.7.0.1796-linux.any.x86_64.tar.gz
         tar -xf *.tar.gz
-        
+
     - name: install-dfp-package
       run: |
         wget http://packs.download.atmel.com/Atmel.ATtiny_DFP.2.0.368.atpack

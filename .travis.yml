@@ -17,7 +17,7 @@ install:
     avr-gcc --version
     make --version
     wget http://packs.download.atmel.com/Atmel.ATtiny_DFP.2.0.368.atpack
-    unzip *.atpack -d ./Firnmware/DFP
+    unzip *.atpack -d ./Firmware/DFP
 
 before_script:
   - set -e

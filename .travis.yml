@@ -23,9 +23,9 @@ before_script:
     mkdir TEST
     cd TEST
   - |
-    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/Test/main.c
-    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/Test/spi/spi.c
-    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/Test/matrix/matrix.c
+    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/TEST/main.c
+    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/TEST/spi/spi.c
+    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/TEST/matrix/matrix.c
   - |
     cd ..
     mkdir DISPLAY

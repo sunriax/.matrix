@@ -2,7 +2,7 @@
 
 # . Matrix Display Controller
 
-[![PCB](https://raw.githubusercontent.com/sunriax/.matrix/main/pcb_top.png)](https://raw.githubusercontent.com/sunriax/.matrix/main/pcb.png)
+[![PCB](https://raw.githubusercontent.com/sunriax/.matrix/main/pcb_top.png)](https://raw.githubusercontent.com/sunriax/.matrix/main/matrix.png)
 
 The MDC (Matrix Display Controller) is to interact with a dot matrix display (like the [Kingbright TA20](https://at.rs-online.com/web/p/led-displays/4516650?sra=pmpn)) over `SPI` bus or `UART` (See the command list below).
 
@@ -18,8 +18,7 @@ The MDC (Matrix Display Controller) is to interact with a dot matrix display (li
 
 | TOP | BOT |
 |-----|-----|
-| ![PCB Top](pcb_top.png)
-| ![PCB Bot](pcb_bot.png) | 
+| ![PCB Top](pcb_top.png) | ![PCB Bot](pcb_bot.png) | 
 
 ## Agenda
 

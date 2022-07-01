@@ -42,7 +42,7 @@ before_script:
 
 script:
   - |
-    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=atmega8a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=atmega16a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
     ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex test.elf test.hex
     ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
   - |

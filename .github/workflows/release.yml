@@ -1,0 +1,103 @@
+name: build-firmware
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: install-build-tools
+      run: |
+        wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-3.7.0.1796-linux.any.x86_64.tar.gz
+        tar -xf *.tar.gz
+        
+    - name: install-dfp-package
+      run: |
+        wget http://packs.download.atmel.com/Atmel.ATtiny_DFP.2.0.368.atpack
+        unzip *.atpack -d ./Firmware/DFP
+
+    - name: build-display-firmware
+      run: |
+        mkdir DISPLAY
+        cd DISPLAY
+        ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/main.c
+        ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/matrix/matrix.c
+        cd ..
+        ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=attiny406 -B ./Firmware/DFP/gcc/dev/attiny406 -I ./Firmware/DFP/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
+        ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex display.elf display.hex
+        ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
+
+    - name: build-test-firmware
+      run: |
+        mkdir TEST
+        cd TEST
+        ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/main.c
+        ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/spi/spi.c
+        ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/matrix/matrix.c
+        cd ..
+        ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=atmega16a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
+        ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex test.elf test.hex
+        ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
+
+    - name: generate-firmware
+      run: |
+        zip -r ./Display.zip ./display.hex ./display.eep
+        tar cfvz ./Display.tar.gz ./display.hex ./display.eep
+        zip -r ./Test.zip ./test.hex ./test.eep
+        tar cfvz ./Test.tar.gz ./test.hex ./test.eep
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: upload-matrix-firmware-zip-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Display.zip
+        asset_name: matrix-firmware.zip
+        asset_content_type: application/zip
+
+    - name: upload-matrix-test-firmware-zip-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Test.zip
+        asset_name: test-firmware-atmega16a.zip
+        asset_content_type: application/zip
+
+    - name: upload-matrix-firmware-gzip-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Display.tar.gz
+        asset_name: matrix-firmware.tar.gz
+        asset_content_type: application/gzip
+
+    - name: upload-matrix-test-firmware-gzip-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Test.tar.gz
+        asset_name: test-firmware-atmega16a.tar.gz
+        asset_content_type: application/gzip

@@ -1,18 +1,18 @@
-[![Version: 1.0 Release](https://img.shields.io/badge/Version-1.0%20Release-green.svg)](https://github.com/sunriax) [![Build](https://github.com/sunriax/.matrix/actions/workflows/avr.yml/badge.svg)](https://github.com/sunriax/.matrix/actions) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Version: 1.0 Release](https://img.shields.io/badge/Version-1.0%20Release-green.svg)](https://github.com/sunriax) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # . Matrix Display Controller
 
-[![PCB](https://raw.githubusercontent.com/sunriax/.matrix/main/pcb_top.png)](https://raw.githubusercontent.com/sunriax/.matrix/main/matrix.png)
+[![PCB](https://raw.githubusercontent.com/sunriax/.matrix/main/matrix.png)](https://raw.githubusercontent.com/sunriax/.matrix/main/matrix.png)
 
 The MDC (Matrix Display Controller) is to interact with a dot matrix display (like the [Kingbright TA20](https://at.rs-online.com/web/p/led-displays/4516650?sra=pmpn)) over `SPI` bus or `UART` (See the command list below).
 
-# Schematic/PCB
+# Board
 
 | Download | Description |
 |-------|:------:|
-| [Schematic](https://cadlab.io/project/25253/develop/circuit/UENCL21hdHJpeC5raWNhZF9zY2g%3D) | Complete Schematic of the Display|
-| [KiCAD](https://cadlab.io/project/25253/develop/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | KiCAD files |
-| [Gerber](https://cadlab.io/project/25253/develop/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | Gerber production and drill files |
+| [Schematic](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9zY2g%3D) | Complete Schematic of the Display|
+| [KiCAD](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | KiCAD files |
+| [Gerber](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | Gerber production and drill files |
 
 ## 3D Model
 
@@ -24,8 +24,8 @@ The MDC (Matrix Display Controller) is to interact with a dot matrix display (li
 
 | Board | Status |
 |-------|:------:|
-| [Schematic](https://cadlab.io/project/25253/develop/circuit/UENCL21hdHJpeC5raWNhZF9zY2g%3D) | ✔️ Done |
-| [Board](https://cadlab.io/project/25253/develop/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | ✔️ Done |
+| [Schematic](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9zY2g%3D) | ✔️ Done |
+| [Board](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | ✔️ Done |
 | [Partlist](./PCB/docs/partlist.csv) | ✔️ Done |
 | Production | ✔️ Done |
 | [Assembly](pcb.png) | ✔️ Done |
@@ -40,9 +40,13 @@ The MDC (Matrix Display Controller) is to interact with a dot matrix display (li
 
 # Display
 
+The display can be driven in two modes either the standard (`spi`) mode or the `uart` mode.
+
+## SPI mode
+
 The display can be controlled with the `matrix` library. The library can be found in the [TEST project](./Firmware/TEST/main.c). The library is modular and can be adapted onto other plattforms. For platform adaptions the `spi` library has to be rewritten for the target platform. Currently the library can be used with an `ATmega16A`.
 
-## Startup
+### Startup
 
 ``` c
 // User libraries
@@ -85,7 +89,7 @@ int main(void)
 | `matrix_prom_write(0-255, DEFINE, ARRAY)` | Save an array (5*7) to the display EEPROM      |
 | `matrix_prom_read(0-255, DEFINE)`         | Load an array from EEPROM to the display       |
 
-## Example
+### Example
 
 ``` c
 // TEST Connection
@@ -171,9 +175,32 @@ int main(void)
 }
 ```
 
+## UART mode
 
+The standard ASCII characters can also be transferred to display over UART. Therefore a special configuration is necessary. Pin `SS` should be connected to ground (`GND`) before powering the display.
 
+``` c
+// TEST Connection
+//
+//           DISPLAY 0              USB/UART
+//      +~~~~~~~~~~~~~~~~~+   +~~~~~~~~~~~~~~~~~+
+//      |                 |   |                 |
+//      + VCC         VCC +---+ VCC             |
+//      |                 |   |             +---+
+//      + MOSI       MISO +---+ TXD         | U |
+//      + SCK         SCK +   |             | S |
+//  +---+ SS           SS +   |             | B |
+//  +---+ GND         GND +---+ GND         +---+
+//      |                 |   |                 |
+//      +~~~~~~~~~~~~~~~~~+   +~~~~~~~~~~~~~~~~~+
+```
 
+Characters can be sent to the display over [TeraTerm](https://osdn.net/projects/ttssh2/releases/) or [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+`UART` should contain following setup:
 
-### UART mode
-
+| Parameter | Value |
+|-----------|-------|
+| Baudrate  | 9600  |
+| Datasize  | 8 Bit |
+| Parity    | None  |
+| Stopbits  | 1     |

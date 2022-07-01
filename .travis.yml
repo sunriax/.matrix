@@ -34,7 +34,6 @@ before_script:
     mkdir DISPLAY
     cd DISPLAY
     avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/main.c
-    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/matrix/matrix.c
   - cd ..
 
 script:

@@ -1,0 +1,60 @@
+name: build-firmware
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: install-build-tools
+      run: |
+           wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-3.7.0.1796-linux.any.x86_64.tar.gz
+           tar -xf *.tar.gz
+    - name: install-dfp-package
+      run: |
+           wget http://packs.download.atmel.com/Atmel.ATtiny_DFP.2.0.368.atpack
+           unzip *.atpack -d ./Firmware/DFP
+    - name: build-display-firmware
+      run: |
+           mkdir DISPLAY
+           cd DISPLAY
+           ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/main.c
+           ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/matrix/matrix.c
+           cd ..
+           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=attiny406 -B ./Firmware/DFP/gcc/dev/attiny406 -I ./Firmware/DFP/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
+           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex display.elf display.hex
+           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
+    - name: build-test-firmware
+      run: |
+           mkdir TEST
+           cd TEST
+           ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/main.c
+           ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/spi/spi.c
+           ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/matrix/matrix.c
+           cd ..
+           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=atmega16a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
+           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex test.elf test.hex
+           ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
+    - name: generate-packages
+      run:  |
+            zip -r ./Display.zip ./display.hex ./display.eep
+            tar cfvz ./Display.tar.gz ./display.hex ./display.eep
+            zip -r ./Test.zip ./test.hex ./test.eep
+            tar cfvz ./Test.tar.gz ./test.hex ./test.eep
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware
+        path: |
+          Display.zip
+          Display.tar.gz
+          Test.zip
+          Test.tar.gz
+        retention-days: 5
+        

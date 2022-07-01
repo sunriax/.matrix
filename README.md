@@ -35,8 +35,8 @@ The MDC (Matrix Display Controller) is to interact with a dot matrix display (li
 
 | Image                      | Download |
 |----------------------------|----------|
-| Display | [zip](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Display.zip) / [tar.gz](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Display.zip) |
-| Demo (ATmega16) | [zip](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Test.zip) / [tar.gz](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Test.zip) |
+| Display | [zip](https://github.com/sunriax/.matrix/releases/latest/download/matrix-firmware.zip) / [tar.gz](https://github.com/sunriax/.matrix/releases/latest/download/matrix-firmware.tar.gz) |
+| Demo (ATmega16) | [zip](https://github.com/sunriax/.matrix/releases/latest/download/test-firmware-atmega16a.zip) / [tar.gz](https://github.com/sunriax/.matrix/releases/latest/download/test-firmware-atmega16a.tar.gz) |
 
 
 # Display

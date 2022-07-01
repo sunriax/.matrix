@@ -41,20 +41,20 @@ jobs:
            ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=atmega16a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
            ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex test.elf test.hex
            ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
-    - name: generate-packages
-      run:  |
-            zip -r ./Display.zip ./display.hex ./display.eep
-            tar cfvz ./Display.tar.gz ./display.hex ./display.eep
-            zip -r ./Test.zip ./test.hex ./test.eep
-            tar cfvz ./Test.tar.gz ./test.hex ./test.eep
-    - name: 'Upload Artifact'
+    - name: upload-display-firmware
       uses: actions/upload-artifact@v3
       with:
-        name: firmware
+        name: matrix-display-firmware
         path: |
-          Display.zip
-          Display.tar.gz
-          Test.zip
-          Test.tar.gz
+          display.hex
+          display.eep
+        retention-days: 5
+    - name: upload-test-firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-matrix-firmware
+        path: |
+          test.hex
+          test.eep
         retention-days: 5
         

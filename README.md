@@ -26,7 +26,7 @@ The MDC (Matrix Display Controller) is to interact with a dot matrix display (li
 |-------|:------:|
 | [Schematic](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9zY2g%3D) | ✔️ Done |
 | [Board](https://cadlab.io/project/25253/main/circuit/UENCL21hdHJpeC5raWNhZF9wY2I%3D) | ✔️ Done |
-| [Partlist](./PCB/docs/partlist.csv) | ✔️ Done |
+| [Partlist](./PCB/docs/matrix.csv) | ✔️ Done |
 | Production | ✔️ Done |
 | [Assembly](pcb.png) | ✔️ Done |
 | Case | ❌ Open |

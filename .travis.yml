@@ -6,45 +6,49 @@ os: linux
 addons:
   apt:
     packages:
-      - binutils-avr
-      - avr-libc
-      - gcc-avr
+#      - binutils-avr
+#      - avr-libc
+#      - gcc-avr
       - git
 
 install:
   - |
     git --version
-    avr-gcc --version
-    make --version
-
-before_script:
-  - set -e
+#    avr-gcc --version
+#    make --version
   - |
     wget http://packs.download.atmel.com/Atmel.ATtiny_DFP.2.0.368.atpack
     unzip *.atpack -d ./Firmware/DFP
   - |
+    wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/avr8-gnu-toolchain-3.7.0.1796-linux.any.x86_64.tar.gz
+    tar -xf *.tar.gz
+
+before_script:
+  - set -e
+  - |
     mkdir TEST
     cd TEST
   - |
-    avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/main.c
-    avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/spi/spi.c
-    avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/matrix/matrix.c
+    ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/main.c
+    ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/spi/spi.c
+    ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=atmega16a -std=gnu99 -c ../Firmware/TEST/matrix/matrix.c
   - |
     cd ..
     mkdir DISPLAY
     cd DISPLAY
-    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/main.c
+    ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/main.c
+    ../avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -c ../Firmware/DISPLAY/matrix/matrix.c
   - cd ..
 
 script:
   - |
-    avr-gcc -g -mmcu=atmega8a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
-    avr-objcopy -j .text -j .data -O ihex test.elf test.hex
-    avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=atmega8a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex test.elf test.hex
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
   - |
-    avr-gcc -g -mmcu=attiny406 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
-    avr-objcopy -j .text -j .data -O ihex display.elf display.hex
-    avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc -g -mmcu=attiny406 -B ../Firmware/DFP/gcc/dev/attiny406 -I ../Firmware/DFP/include -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .text -j .data -O ihex display.elf display.hex
+    ./avr8-gnu-toolchain-linux_x86_64/bin/avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
 
 before_deploy:
   - |

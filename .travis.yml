@@ -1,0 +1,75 @@
+# Travis CI build pipeline
+# --------------------------------------------
+language: c
+os: linux
+
+addons:
+  apt:
+    packages:
+      - binutils-avr
+      - avr-libc
+      - gcc-avr
+      - git
+
+install:
+  - |
+    git --version
+    avr-gcc --version
+    make --version
+  
+before_script:
+  - set -e
+  - |
+    mkdir TEST
+    cd TEST
+  - |
+    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/Test/main.c
+    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/Test/spi/spi.c
+    avr-gcc -g -x c -O1 -mmcu=atmega8a -std=gnu99 -c ../Firmware/Test/matrix/matrix.c
+  - |
+    cd ..
+    mkdir DISPLAY
+    cd DISPLAY
+    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -c ../Firmware/DISPLAY/main.c
+    avr-gcc -g -x c -O1 -mmcu=attiny406 -std=gnu99 -c ../Firmware/DISPLAY/matrix/matrix.c
+  -| cd ..
+
+script:
+  - |
+    avr-gcc -g -mmcu=atmega8a -o test.elf ./TEST/main.o ./TEST/spi.o ./TEST/matrix.o
+    avr-objcopy -j .text -j .data -O ihex test.elf test.hex
+    avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex test.elf test.eep
+  - |
+    avr-gcc -g -mmcu=attiny406 -o display.elf ./DISPLAY/main.o ./DISPLAY/matrix.o
+    avr-objcopy -j .text -j .data -O ihex display.elf display.hex
+    avr-objcopy -j .eeprom --change-section-lma .eeprom=0 -O ihex display.elf display.eep
+
+before_deploy:
+  - |
+    if [ -n $TRAVIS_TAG ] && [[ $TRAVIS_TAG =~ ^v[0-9].[0-9]-[(F|f)]irmware$ ]]; then
+      travis_terminate 0
+    fi
+  - set -e
+  - git config --local user.name "0x007E"
+  - |
+    zip -r ./Display.zip ./display.hex ./display.eep
+    tar cfvz ./Display.tar.gz ./display.hex ./display.eep
+  - |
+    zip -r ./Test.zip ./test.hex ./test.eep
+    tar cfvz ./Test.tar.gz ./test.hex ./test.eep
+  - export TRAVIS_TAG="${TRAVIS_TAG}-Firmware"
+
+deploy:
+  provider: releases
+  overwrite: true
+  api_key: $GITHUB_TOKEN
+  name: "Firmware ${TRAVIS_TAG}"
+  file_glob: true
+  file:
+    - "./Display.zip"
+    - "./Display.tar.gz"
+    - "./Test.zip"
+    - "./Test.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true

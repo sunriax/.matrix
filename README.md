@@ -31,12 +31,13 @@ The MDC (Matrix Display Controller) is to interact with a dot matrix display (li
 | [Assembly](pcb.png) | ✔️ Done |
 | Case | ❌ Open |
 
-# Firmware
+# Firmware [![Build Status](https://app.travis-ci.com/sunriax/.matrix.svg?branch=main)](https://app.travis-ci.com/github/sunriax/.matrix)
 
-| Download    | Status |
-|-------------|--------|
-| [Display](http://) | [![Build Status](https://app.travis-ci.com/sunriax/.matrix.svg?branch=main)](https://app.travis-ci.com/sunriax/.matrix) |
-| [Demo (ATmega16)](http://) | [![Build Status](https://app.travis-ci.com/sunriax/.matrix.svg?branch=main)](https://app.travis-ci.com/sunriax/.matrix) |
+| Image                      | Download |
+|----------------------------|----------|
+| Display | [zip](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Display.zip) / [tar.gz](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Display.zip) |
+| Demo (ATmega16) | [zip](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Test.zip) / [tar.gz](https://github.com/sunriax/.matrix/releases/download/v1.0-Firmware/Test.zip) |
+
 
 # Display
 
